@@ -1,12 +1,30 @@
 import { Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
 import { Image } from 'expo-image';
-import { colors } from '../utils/theme';
+import { colors, fontsizes } from '../utils/theme';
 import { useNavigation } from '@react-navigation/native';
+import { userLogin } from '../services/UserService';
 
-const LoginPage = () => {
 
+const LoginPage = ({loginUser}) => {
+
+  const [name, setName] = useState("admin");
+  const [password, setPassword] = useState("admin");
   const [rememberMe, setRememberme] = useState(false);
+
+
+  const signInUserAsync = async () => {
+    await userLogin({
+        userName: name,
+        password: password
+    }).then(res => {
+        if(res.status == 200) {
+            //console.log(res.data);
+            console.log('Virker');
+            loginUser(res.data);
+        }
+    })
+  }
 
   const nav = useNavigation();
 
@@ -22,8 +40,8 @@ const LoginPage = () => {
                 <Text style={styles.title}>Velkommen</Text>
                 
                 <View style={styles.inputContainer}>
-                    <TextInput style={styles.input} placeholder='Navn' />
-                    <TextInput style={styles.input} placeholder='Adgangskode' />
+                    <TextInput style={styles.input} placeholder='Navn' onChangeText={(text) => setName(text)} value='admin' />
+                    <TextInput style={styles.input} placeholder='Adgangskode' onChangeText={(text) => setPassword(text)} value='admin' secureTextEntry/>
 
                     <View style={styles.optionsContainer}>
                         <TouchableOpacity style={styles.checkBoxContainer} onPress={() => setRememberme(!rememberMe)}>
@@ -40,7 +58,7 @@ const LoginPage = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity style={styles.loginBtn}>
+                    <TouchableOpacity style={styles.loginBtn} onPress={signInUserAsync}>
                         <Text style={styles.loginText}>Login</Text>
                     </TouchableOpacity>
                 </View>
@@ -68,7 +86,7 @@ const styles = StyleSheet.create({
         width: 120,
     },
     title: {
-        fontSize: 30,
+        fontSize: fontsizes.title,
         fontWeight: 'bold',
     },
     inputContainer: {

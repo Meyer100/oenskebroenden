@@ -15,3 +15,18 @@ export const createAccount = async data => {
        console.log(error)
     }
 }
+
+export const userLogin = async data => {
+    try {
+        const result = await APIManager(`Account/Login?userName=${data.userName}&password=${data.password}`, {
+            method: 'POST',
+            headers: {
+                'content-type':'application/json'
+            },
+        });
+        return result;
+     }
+     catch (error) {
+        console.log(error)
+     }
+}

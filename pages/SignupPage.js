@@ -1,7 +1,7 @@
 import { Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
 import { Image } from 'expo-image';
-import { colors } from '../utils/theme';
+import { colors, fontsizes } from '../utils/theme';
 import { useNavigation } from '@react-navigation/native';
 import { createAccount } from '../services/UserService';
 
@@ -29,7 +29,7 @@ const SignupPage = () => {
         return;
     }
 
-    const result = await createAccount({Name: name, Email: email, Password: password}).then(res => {
+    await createAccount({Name: name, Email: email, Password: password}).then(res => {
         if(res.status == 200) {
             console.log('Konto Oprettet!');
         }
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         width: 120,
     },
     title: {
-        fontSize: 30,
+        fontSize: fontsizes.title,
         fontWeight: 'bold',
     },
     inputContainer: {
