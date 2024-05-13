@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        padding: 20,
     },
     wishContainer: {
         flexDirection: 'row',
@@ -36,8 +37,8 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         backgroundColor: colors.wishItemBackground,
-        height: 50,
-        width: 50,
+        height: 40,
+        width: 40,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 16,
+        fontWeight: '500',
     },
     countText: {
         color: colors.textGray,

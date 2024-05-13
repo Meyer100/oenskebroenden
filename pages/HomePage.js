@@ -1,10 +1,11 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
 import { fontsizes } from '../utils/theme'
+import { Image } from 'expo-image'
+import { useNavigation } from '@react-navigation/native'
 import SharedWishItem from '../components/homepage/SharedWishItem'
 import WishItem from '../components/homepage/WishItem'
-import { Image } from 'expo-image'
-
+import AddWishlist from '../components/homepage/AddWishlist'
 
 
 const HomePage = () => {
@@ -13,24 +14,28 @@ const HomePage = () => {
     {id: 2, title: 'Tech', author: 'Jonas ItJab Albin', emoji: '📱'},
     {id: 3, title: 'Tech', author: 'Jonas ItJab Albin', emoji: '📱'},
     {id: 4, title: 'Tech', author: 'Jonas ItJab Albin', emoji: '📱'},
-  ]
+  ];
 
   const maadrillapt2 = [
     {id: 1, title: 'Techdddddd', author: 'Jonas ItJab Albin', emoji: '📱'},
     {id: 2, title: 'Tech', author: 'Jonas ItJab Albin', emoji: '📱'},
     {id: 3, title: 'Tech', author: 'Jonas ItJab Albin', emoji: '📱'},
     {id: 4, title: 'Tech', author: 'Jonas ItJab Albin', emoji: '📱'},
-  ]
+  ];
+
+  // State holder styr på om modal skal vises
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Ønskelister</Text>  
       </View>
       
-      <View>
+      <View style={styles.wishAndTitleContainer}>
         <View style={styles.sharedContainer}>
           <Text style={styles.sharedTitle}>Delt med mig</Text>
-          <Image style={styles.searchIcon} source={require('../assets/images/searchIcon.png')}/>
+          <Image style={styles.sharedIcon} source={require('../assets/images/searchIcon.png')}/>
         </View>
         <View style={styles.sharedWishContainer}>
           <FlatList 
@@ -47,10 +52,12 @@ const HomePage = () => {
       </View>
 
 
-      <View>
+      <View style={styles.wishAndTitleContainer}>
         <View style={styles.wishTitleContainer}>
-          <Text style={styles.wishTitle}>Ønskelister</Text>
-          <Image style={styles.searchIcon} source={require('../assets/images/addIcon.png')}/>
+          <Text style={styles.sharedTitle}>Ønskelister</Text>
+          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+            <Image style={styles.sharedIcon} source={require('../assets/images/addIcon.png')}/>
+          </TouchableOpacity>
         </View>
         <View style={styles.wishContainer}>
             <FlatList 
@@ -64,6 +71,12 @@ const HomePage = () => {
             />
         </View>
       </View>
+      <Modal 
+        visible={modalVisible}
+        animationType='slide'
+      >
+        <AddWishlist />
+      </Modal>
     </View>
   )
 }
@@ -88,8 +101,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontsizes.title,
   },
+  wishAndTitleContainer: {
+    gap: 10,
+  },
   sharedContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     paddingBottom: 5,
   },
@@ -97,9 +114,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  searchIcon: {
-    height: 20,
-    width: 20,
+  sharedIcon: {
+    height: 17,
+    width: 17,
   },
   sharedWishContainer: {
     backgroundColor: 'white',
@@ -111,19 +128,19 @@ const styles = StyleSheet.create({
   sharedWishItemsContainer: {
     gap: 20,
   },
-  wishTitleContainer: {},
-  wishTitle: {},
-  searchIcon: {},
+  wishTitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   wishContainer: {
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 20,
+    padding: 0,
   },
   itemSeparator: {
-    marginTop: 20,
     marginBottom: 5,
     borderWidth: 0.4,
-    borderColor: 'gray',
-    marginLeft: 20,
+    marginLeft: 65,
+    opacity: 0.1
   },
 })
