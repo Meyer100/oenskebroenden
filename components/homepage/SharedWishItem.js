@@ -5,6 +5,7 @@ import { Image } from 'expo-image'
 
 const SharedWishItem = ({data, openWishlist}) => {
 
+  // Her forkorter jeg strengen hvis den har en længe på over 9
     const truncateTitleString = (str) => {
         if (str.length >= 10) {
           return str.substring(0, 7) + '...';
@@ -13,6 +14,7 @@ const SharedWishItem = ({data, openWishlist}) => {
         }
       };
 
+    // Her forkorter jeg strengen hvis den har en længe på over 16
       const truncateAuthorString = (str) => {
         if (str.length >= 16) {
           return str.substring(0, 13) + '...';
@@ -27,7 +29,7 @@ const SharedWishItem = ({data, openWishlist}) => {
         <Text style={styles.emoji}>{data.emoji}</Text>
       </TouchableOpacity>
       <View>
-        <Text style={styles.title}>{truncateTitleString(data.title)}</Text>
+        <Text style={styles.title}>{truncateTitleString(data.name)}</Text>
         <Text style={styles.author}>{truncateAuthorString(data.author)}</Text>
       </View>
       <View style={styles.closeContainer}>
@@ -45,6 +47,7 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         gap: 5,
+        padding: 15,
     },
     emojiContainer: {
         backgroundColor: colors.wishItemBackground,

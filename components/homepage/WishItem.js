@@ -3,16 +3,16 @@ import React from 'react'
 import { colors } from '../../utils/theme'
 import { Image } from 'expo-image'
 
-const WishItem = ({data}) => {
+const WishItem = ({data, clickEvent}) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={clickEvent}>
         <View style={styles.wishContainer}>
             <TouchableOpacity style={styles.iconContainer}>
-                <Text>🚗</Text>
+                <Text>{data.emoji}</Text>
             </TouchableOpacity>
             <View style={styles.textContainer}>
-                <Text style={styles.title}>{data.title}</Text>
-                <Text style={styles.countText}>6 items</Text>
+                <Text style={styles.title}>{data.name}</Text>
+                <Text style={styles.countText}>{data.wishes.length} items</Text>
             </View>
         </View>
         <View style={styles.optionsContainer}>

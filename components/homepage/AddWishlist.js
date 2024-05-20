@@ -4,7 +4,7 @@ import { Image } from 'expo-image'
 import EmojiSelector from 'react-native-emoji-selector'
 import { colors, fontsizes } from '../../utils/theme'
 
-const AddWishlist = () => {
+const AddWishlist = ({createWishlist, closeModal}) => {
 
   const [name, setName] = useState();
   const [emoji, setEmoji] = useState();
@@ -15,10 +15,29 @@ const AddWishlist = () => {
     setSelectEmoji(false);
   }
 
+  const removeKeyboardAndEmoji = () => {
+    Keyboard.dismiss();
+    setSelectEmoji(false);
+  }
+
+  const addNewWishlist = () => {
+    // Tilføj error handling!
+    const wishlist = {
+      name: name,
+      ownerId: 0,
+      emoji: emoji
+    };
+    createWishlist(wishlist);
+    closeModal();
+  }
+
+
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <TouchableWithoutFeedback onPress={removeKeyboardAndEmoji}>
       <View style={styles.container}>
+        <TouchableOpacity onPress={closeModal}>
           <Image style={styles.backIcon} source={require('../../assets/images/backIcon.png')}/>
+        </TouchableOpacity>
 
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Opret Ønskeliste</Text>
@@ -27,7 +46,7 @@ const AddWishlist = () => {
         <View style={styles.createContainer}>
           <View style={styles.nameContainer}>
             <Text style={styles.nameTitle}>Navn</Text>
-            <TextInput style={styles.nameInput} placeholder='Min nye ønskeliste...' placeholderTextColor="gray" />
+            <TextInput style={styles.nameInput} placeholder='Min nye ønskeliste...' placeholderTextColor="gray" onChangeText={(text) => setName(text)} />
           </View>
 
           <View style={styles.iconContainer}>
@@ -38,14 +57,17 @@ const AddWishlist = () => {
           </View>
 
           <View style={styles.createButtonContainer}>
-            <TouchableOpacity style={styles.createButton}>
+            {selectEmoji ? null :
+            <TouchableOpacity style={styles.createButton} onPress={addNewWishlist}>
               <Text style={styles.createTitle}>Opret</Text>
             </TouchableOpacity>
+            }
           </View>
 
         </View>
         {selectEmoji ?
-          <EmojiSelector onEmojiSelected={emoji => changeEmoji(emoji)} />
+        
+          <EmojiSelector onEmojiSelected={emoji => changeEmoji(emoji)} showTabs={false}/>
           : null}
       </View>
     </TouchableWithoutFeedback>
