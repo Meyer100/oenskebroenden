@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import { Image } from "expo-image";
 import { colors, fontsizes } from "../../utils/theme";
+import { themeCore } from "../../utils/themes.android";
 
 const AddWish = ({addWish, closeModal}) => {
 
@@ -123,7 +124,7 @@ export default AddWish;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 70,
+    paddingTop: themeCore.paddingTop,
     paddingHorizontal: 20,
     flex: 1,
     backgroundColor: "#f2f2f2",
@@ -147,9 +148,9 @@ const styles = StyleSheet.create({
   optionWrapper: {
     backgroundColor: colors.wishItemBackground,
     flexDirection: 'row',
-    width: '50%',
+    width: '55%',
     height: 35,
-    borderRadius: '100%',
+    borderRadius: 18,
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
   typeOption: {
     flex: 1,
     alignItems: 'center',
-    borderRadius: '100%',
+    borderRadius: 18,
     height: 25,
     justifyContent: 'center',
   },
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
   createButtonContainer: {
     flex: 1,
     justifyContent: "flex-end",
-    marginBottom: 50,
+    marginBottom: themeCore.marginBottom,
   },
   createButton: {
     backgroundColor: colors.buttonPrimary,

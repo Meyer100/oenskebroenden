@@ -14,6 +14,7 @@ import SharedWishItem from "../components/homepage/SharedWishItem";
 import WishItem from "../components/homepage/WishItem";
 import AddWishlist from "../components/homepage/AddWishlist";
 import { createWishlist, getOwnWishlists } from "../services/WishService";
+import { themeCore } from "../utils/themes.android";
 
 const HomePage = ({ user }) => {
 
@@ -135,7 +136,7 @@ export default HomePage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 70,
+    paddingTop: themeCore.paddingTop,
 
     paddingHorizontal: 20,
     gap: 30,

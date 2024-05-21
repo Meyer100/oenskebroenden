@@ -4,6 +4,7 @@ import { Image } from 'expo-image';
 import { colors, fontsizes } from '../utils/theme';
 import { useNavigation } from '@react-navigation/native';
 import { createAccount } from '../services/UserService';
+import { themeCore } from "../utils/themes.android";
 
 const SignupPage = () => {
   const nav = useNavigation();
