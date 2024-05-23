@@ -16,7 +16,9 @@ const WishlistPage = ({user}) => {
 
   // State holder styr på om modal skal vises
   const [modalAddWishVisible, setModalAddWishVisible] = useState(false);
+ 
   
+ 
   
   const addWish = async (data) => {
     data.wishListId = wishlist.id;
@@ -30,7 +32,7 @@ const WishlistPage = ({user}) => {
 
   const navigateToShowWishPage = (wish) => {
     if(wish) {
-      nav.navigate('ShowWish', {wish: wish});
+      nav.navigate('ShowWish', {wish: wish,removeWish: removeWish});
     }
   }
 
