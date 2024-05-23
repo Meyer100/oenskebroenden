@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Image } from 'expo-image'
 import EmojiSelector from 'react-native-emoji-selector'
 import { colors, fontsizes } from '../../utils/theme'
+import { themeCore } from '../../utils/themes.android'
 
 const AddWishlist = ({createWishlist, closeModal}) => {
 
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
   createButtonContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    marginBottom: 50,
+    marginBottom: themeCore.marginBottom,
   },
   createButton: {
     backgroundColor: colors.buttonPrimary,

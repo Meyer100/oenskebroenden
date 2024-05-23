@@ -6,6 +6,8 @@ import AddWish from '../components/wishlistpage/AddWish'
 import { createWish } from '../services/WishService'
 import { Image } from 'expo-image'
 import Wish from '../components/wishlistpage/Wish'
+import { themeCore } from "../utils/themes.android";
+
 
 const WishlistPage = ({user}) => {
   
@@ -13,8 +15,8 @@ const WishlistPage = ({user}) => {
   const {wishlist} = route?.params;
 
   // State holder styr på om modal skal vises
-  const [modalVisible, setModalVisible] = useState(false);
-
+  const [modalAddWishVisible, setModalAddWishVisible] = useState(false);
+  
   
   const addWish = async (data) => {
     data.wishListId = wishlist.id;
@@ -50,13 +52,14 @@ const WishlistPage = ({user}) => {
           <Text style={styles.title}>{wishlist.name}</Text>
         </View>
       {/*<View style={styles.topContainer}>
-        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+        <TouchableOpacity style={styles.addButton} onPress={() => setModalAddWishVisible(true)}>
             <Text style={styles.addText}>+</Text>
         </TouchableOpacity>
 
         <Wish wish={wishlist.wishes[0]}/>
         </View>*/}
-        <TouchableOpacity style={styles.addBtn} onPress={() => setModalVisible(true)}>
+
+        <TouchableOpacity style={styles.addBtn} onPress={() => setModalAddWishVisible(true)}>
             <Text style={styles.addText}>+</Text>
         </TouchableOpacity>
 
@@ -74,9 +77,12 @@ const WishlistPage = ({user}) => {
         />
       
       
-      <Modal visible={modalVisible} animationType='slide'>
-        <AddWish addWish={(param) => addWish(param)}  closeModal={() => setModalVisible(false)}/>
+      <Modal visible={modalAddWishVisible} animationType='slide'>
+        <AddWish addWish={(param) => addWish(param)}  closeModal={() => setModalAddWishVisible(false)}/>
       </Modal>
+
+
+      
     </View>
   )
 }
@@ -90,7 +96,7 @@ export default WishlistPage
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 70,
+        paddingTop: themeCore.paddingTop,
         paddingHorizontal: 40,
     },
     backIcon: {

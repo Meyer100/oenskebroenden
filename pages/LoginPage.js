@@ -4,6 +4,7 @@ import { Image } from 'expo-image';
 import { colors, fontsizes } from '../utils/theme';
 import { useNavigation } from '@react-navigation/native';
 import { userLogin } from '../services/UserService';
+import { themeCore } from "../utils/themes.android";
 
 
 const LoginPage = ({loginUser}) => {
@@ -36,7 +37,7 @@ const LoginPage = ({loginUser}) => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View  style={styles.container}>
             <View style={styles.loginContainer}>
-                <Image style={styles.logo} source={require('../assets/images/logo.png')}/>
+                <Image style={styles.logo} contentFit='contain' source={require('../assets/images/logo.svg')}/>
                 <Text style={styles.title}>Velkommen</Text>
                 
                 <View style={styles.inputContainer}>
@@ -83,7 +84,9 @@ const styles = StyleSheet.create({
     },
     logo: {
         height: 120,
-        width: 120,
+        width:150,
+        
+        
     },
     title: {
         fontSize: fontsizes.title,
