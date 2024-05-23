@@ -98,19 +98,3 @@ export const addWishlistToHistory = async (token, id) => {
        console.log(error)
     }
 }
-
-export const deleteWish = async (token, id) => {
-    try {
-       const result = await APIManager(`Wish/DeleteWish?wishId=${id}`, {
-           method: 'DELETE',
-           headers: {
-               'content-type':'application/json',
-               'Authorization': `Bearer ${token}`
-           },
-       });
-       return result;
-    }
-    catch (error) {
-       console.log(error)
-    }
-}

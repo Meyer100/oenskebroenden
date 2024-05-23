@@ -1,23 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
+import { useRoute } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import { colors, fontsizes } from '../utils/theme';
-import { deleteWish } from '../services/WishService';
-import { useNavigation, useRoute } from '@react-navigation/native'
 
 const ShowWishPage = ({user}) => {
     const route = useRoute();
-    const nav = useNavigation();
-    const {wish,removeWish} = route?.params;
-    const deleteWishBtn = async () => {
-  
-      await deleteWish(user.token,wish.id).then(res => {
-        if(res.status == 200){
-          console.log("Wish Deleted");
-        }
-      })
-      nav.pop();
-    }
+    const {wish} = route?.params;
   return (
     <View style={styles.container}>
         <TouchableOpacity onPress={null}>
@@ -57,7 +46,7 @@ const ShowWishPage = ({user}) => {
                 <Image style={styles.pricerunnerIcon} source={require('../assets/images/pricerunnerIcon.png')} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={deleteWishBtn} style={styles.deleteBtn}>
+            <TouchableOpacity style={styles.deleteBtn}>
                 <Image style={styles.deleteIcon} source={require('../assets/images/deleteIcon.png')} />
             </TouchableOpacity>
         </View>
