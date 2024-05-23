@@ -55,7 +55,7 @@ const SignupPage = () => {
                     </View>
 
                     <TouchableOpacity style={styles.signupBtn} onPress={createUser}>
-                        <Text style={styles.signupText}>Login</Text>
+                        <Text style={styles.signupText}>Opret</Text>
                     </TouchableOpacity>
                 </View>
             </View>

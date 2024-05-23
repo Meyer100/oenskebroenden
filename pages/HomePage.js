@@ -13,13 +13,17 @@ import { useNavigation } from "@react-navigation/native";
 import SharedWishItem from "../components/homepage/SharedWishItem";
 import WishItem from "../components/homepage/WishItem";
 import AddWishlist from "../components/homepage/AddWishlist";
-import { createWishlist, getOwnWishlists } from "../services/WishService";
+import { addWishlistToHistory, createWishlist, getHistoryWishlist, getOneWishlist, getOwnWishlists } from "../services/WishService";
+import SearchModal from "../components/homepage/SearchModal";
 
 const HomePage = ({ user }) => {
 
   const [wishlist, setWishlist] = useState(null);
+  const [historyWishlist, setHistoryWishlist] = useState(null);
     // State holder styr på om modal skal vises
-    const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [searchModal, setSearchModal] = useState(false);
 
   const getWishlists = async () => {
     await getOwnWishlists(user.token).then(res => {
@@ -30,10 +34,20 @@ const HomePage = ({ user }) => {
     })
   }
 
+  const getUserHistoryWishlists = async () => {
+    await getHistoryWishlist(user.token).then(res => {
+      if(res.status == 200) {
+        //console.log(res.data);
+        setHistoryWishlist(res.data);
+      }
+    })
+  }
+
 
   // Henter alle ens ønskelister samt ønsker
   useEffect(() => {
     getWishlists();
+    getUserHistoryWishlists();
   },[]);
 
   const maadrilla = [
@@ -54,13 +68,36 @@ const HomePage = ({ user }) => {
           setModalVisible(false);
         }
       })
-      .catch((e) => console.log(e));
   };
+
+  // Metode henter en ønskeliste fra en anden bruger og gemmer i historik
+  const getWishlist = async (id) => {
+    await getOneWishlist(user.token, id).then(async res => {
+      if(res.status == 200) {
+        console.log(res.data);
+        console.log(user.token);
+        await addWishlistToHistory(user.token, id).then(res => {
+          if(res.status == 200) {
+            console.log("Tilføjet til history!");
+            getUserHistoryWishlists();
+          }
+        })
+      }
+    })
+  }
+
 
   const nav = useNavigation();
   const navigateToWishlistPage = (wishlist) => {
     if(wishlist) {
       nav.navigate('Wishlist', {wishlist: wishlist});
+    }
+  }
+
+  const navigateToSharedWishlistPage = (wishlist) => {
+    if(wishlist) {
+      console.log(wishlist);
+      nav.navigate('SharedWishlistPage', {wishlist: wishlist});
     }
   }
 
@@ -74,16 +111,19 @@ const HomePage = ({ user }) => {
       <View style={styles.wishAndTitleContainer}>
         <View style={styles.sharedContainer}>
           <Text style={styles.sharedTitle}>Delt med mig</Text>
-          <Image
-            style={styles.sharedIcon}
-            source={require("../assets/images/searchIcon.png")}
-          />
+          <TouchableOpacity onPress={() => setSearchModal(true)}>
+            <Image
+              style={styles.sharedIcon}
+              source={require("../assets/images/searchIcon.png")}
+            />
+          </TouchableOpacity>
+
         </View>
         <View style={styles.sharedWishContainer}>
           <FlatList
-            data={maadrilla}
+            data={historyWishlist}
             renderItem={({ item }) => {
-              return <SharedWishItem data={item} />;
+              return <SharedWishItem data={item.wishList} clickEvent={() => navigateToSharedWishlistPage(item.wishList)} />;
             }}
             keyExtractor={(item) => item.id.toString()}
             horizontal
@@ -121,6 +161,10 @@ const HomePage = ({ user }) => {
           createWishlist={(wishlist) => createNewWishlist(wishlist)}
           closeModal={() => setModalVisible(false)}
         />
+      </Modal>
+
+      <Modal visible={searchModal} animationType="fade" transparent={true}>
+        <SearchModal closeModal={() => setSearchModal(false)} getwishList={(param) => getWishlist(param)}/>
       </Modal>
     </View>
   );

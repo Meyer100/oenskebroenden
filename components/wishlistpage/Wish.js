@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Image } from 'expo-image'
 import { colors } from '../../utils/theme'
-const Wish = ({wish}) => {
+const Wish = ({wish, navigateToWish}) => {
 
       // Her forkorter jeg strengen hvis den har en længe på over 9
       const truncateTitleString = (str) => {
@@ -15,9 +15,9 @@ const Wish = ({wish}) => {
       
   return (
     <View style={styles.firstProductContainer}>
-        <View style={styles.productBackground}>
+        <TouchableOpacity style={styles.productBackground} onPress={navigateToWish}>
             <Image style={styles.productPicture} source={{uri: wish.pictureURL}} contentFit='cover'/>
-        </View>
+        </TouchableOpacity>
         <View style={styles.wishOptions}>
             <Text style={styles.wishName}>{truncateTitleString(wish.name)}</Text>
             <TouchableOpacity>

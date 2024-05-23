@@ -34,6 +34,22 @@ export const getOwnWishlists = async (token) => {
     }
 }
 
+export const getHistoryWishlist = async (token) => {
+    try {
+       const result = await APIManager(`History/GetHistory`, {
+           method: 'GET',
+           headers: {
+               'content-type':'application/json',
+               'Authorization': `Bearer ${token}`
+           },
+       });
+       return result;
+    }
+    catch (error) {
+       console.log(error)
+    }
+}
+
 export const createWish = async (data, token) => {
     try {
        const result = await APIManager("wish/CreateWish", {
@@ -43,6 +59,38 @@ export const createWish = async (data, token) => {
                'Authorization': `Bearer ${token}`
            },
            data: data
+       });
+       return result;
+    }
+    catch (error) {
+       console.log(error)
+    }
+}
+
+export const getOneWishlist = async (token, id) => {
+    try {
+       const result = await APIManager(`Wish/GetOneWishList?wishListId=${id}`, {
+           method: 'GET',
+           headers: {
+               'content-type':'application/json',
+               'Authorization': `Bearer ${token}`
+           },
+       });
+       return result;
+    }
+    catch (error) {
+       console.log(error)
+    }
+}
+
+export const addWishlistToHistory = async (token, id) => {
+    try {
+       const result = await APIManager(`History/AddHistory?wishListId=${id}`, {
+           method: 'POST',
+           headers: {
+               'content-type':'application/json',
+               'Authorization': `Bearer ${token}`
+           },
        });
        return result;
     }

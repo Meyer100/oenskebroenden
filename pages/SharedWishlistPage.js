@@ -7,30 +7,19 @@ import { createWish } from '../services/WishService'
 import { Image } from 'expo-image'
 import Wish from '../components/wishlistpage/Wish'
 
-const WishlistPage = ({user}) => {
+const SharedWishlistPage = ({user}) => {
   
   const route = useRoute();
   const {wishlist} = route?.params;
 
-  // State holder styr på om modal skal vises
-  const [modalVisible, setModalVisible] = useState(false);
-
   
-  const addWish = async (data) => {
-    data.wishListId = wishlist.id;
-    await createWish(data, user.token).then(res => {
-        if(res.status == 200) {
-            console.log('Ønske tilføjet!');
-        }
-    })
-  }
   const nav = useNavigation();
 
-  const navigateToShowWishPage = (wish) => {
+  /*const navigateToShowWishPage = (wish) => {
     if(wish) {
       nav.navigate('ShowWish', {wish: wish});
     }
-  }
+  }*/
 
   const navigateBack = () => {
     nav.pop();
@@ -49,21 +38,11 @@ const WishlistPage = ({user}) => {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{wishlist.name}</Text>
         </View>
-      {/*<View style={styles.topContainer}>
-        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-            <Text style={styles.addText}>+</Text>
-        </TouchableOpacity>
-
-        <Wish wish={wishlist.wishes[0]}/>
-        </View>*/}
-        <TouchableOpacity style={styles.addBtn} onPress={() => setModalVisible(true)}>
-            <Text style={styles.addText}>+</Text>
-        </TouchableOpacity>
 
         <FlatList 
           data={wishlist.wishes}
           renderItem={({item}) => {
-            return <Wish wish={item} navigateToWish={() => navigateToShowWishPage(item)}/>
+            return <Wish wish={item} navigateToWish={null}/>
           }}
           keyExtractor={(item) => item.id}
           numColumns={2}
@@ -72,11 +51,6 @@ const WishlistPage = ({user}) => {
           columnWrapperStyle={{justifyContent: 'space-between'}}   // causes items to be equally spaced
           
         />
-      
-      
-      <Modal visible={modalVisible} animationType='slide'>
-        <AddWish addWish={(param) => addWish(param)}  closeModal={() => setModalVisible(false)}/>
-      </Modal>
     </View>
   )
 }
@@ -85,7 +59,7 @@ const ItemSeparator = () => {
     return <View style={{height: 20}} />;
   };
 
-export default WishlistPage
+export default SharedWishlistPage
 
 const styles = StyleSheet.create({
     container: {
@@ -103,17 +77,5 @@ const styles = StyleSheet.create({
       },
       title: {
         fontSize: fontsizes.title,
-      },
-      addBtn: {
-        backgroundColor: colors.buttonPrimary,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 40,
-        borderRadius: 5,
-        marginBottom: 20,
-      },
-      addText: {
-        fontSize: 20,
-        color: 'white',
       },
 })

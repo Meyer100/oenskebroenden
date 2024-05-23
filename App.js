@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import WishlistPage from './pages/WishlistPage';
+import ShowWishPage from './pages/ShowWishPage';
+import ShowWishlistPage from './pages/SharedWishlistPage';
 
 export default function App() {
 
@@ -85,6 +87,12 @@ export default function App() {
           </Stack.Screen>
           <Stack.Screen name='Wishlist'>
             {props => <WishlistPage user={user}/>}
+          </Stack.Screen>
+          <Stack.Screen name='ShowWish'>
+            {props => <ShowWishPage user={user}/>}
+          </Stack.Screen>
+          <Stack.Screen name='SharedWishlistPage'>
+            {props => <ShowWishlistPage user={user}/>}
           </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
