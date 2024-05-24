@@ -1,56 +1,82 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { useRoute } from '@react-navigation/native';
+import React, { useCallback, useMemo, useRef } from 'react'
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import { colors, fontsizes } from '../utils/theme';
+import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet';
+import DeleteWishModal from '../components/showwishpage/DeleteWishModal';
 
-const ShowWishPage = ({user}) => {
+const ShowWishPage = ({user, deleteWish}) => {
     const route = useRoute();
     const {wish} = route?.params;
+
+    const bottomSheetModalRef = useRef(null);
+    const snapPoints = useMemo(() => ['40%'], []);
+
+
+    const nav = useNavigation();
+
+    const handlePresentModalPress = useCallback(() => {
+      bottomSheetModalRef.current?.present();
+    }, []);
+
+    const removeWish = () => {
+      deleteWish(wish.id);
+      nav.pop();
+    }
+
   return (
-    <View style={styles.container}>
-        <TouchableOpacity onPress={null}>
-          <Image
-            style={styles.backIcon}
-            source={require("../assets/images/backIcon.png")}
-          />
-        </TouchableOpacity>
+    <BottomSheetModalProvider>
+      <View style={styles.container}>
+          <TouchableOpacity onPress={() => nav.pop()}>
+            <Image
+              style={styles.backIcon}
+              source={require("../assets/images/backIcon.png")}
+            />
+          </TouchableOpacity>
 
 
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{wish.name}</Text>
-        </View>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{wish.name}</Text>
+          </View>
 
-        <View style={styles.wishContainer}>
-            <View style={styles.imgContainer}>
-                <Image style={styles.wishImg} source={{uri: wish.pictureURL}} contentFit='resize'/>
-            </View>
-            <Text style={styles.wishTitle}>Iphone 14 256GB</Text>
-            <Text style={styles.wishDescription}>In publishing and graphic design, Lorem 
-                ipsum is a placeholder text commonly used 
-                to demonstrate the visual form of a document 
-                or a typeface without relying on meaningful 
-                content.
-            </Text>
+          <View style={styles.wishContainer}>
+              <View style={styles.imgContainer}>
+                  <Image style={styles.wishImg} source={{uri: wish.pictureURL}} contentFit='resize'/>
+              </View>
+              <Text style={styles.wishTitle}>{wish.name}</Text>
+              <Text style={styles.wishDescription}>{wish.description ? wish.description : "Ingen beskrivelse"}</Text>
 
-            <View style={styles.priceContainer}>
-                <Text style={styles.price}>Kr. 6700</Text>
-                <TouchableOpacity style={styles.linkBtn}>
-                    <Text>Link</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+              <View style={styles.priceContainer}>
+                  <Text style={styles.price}>Kr. 6700</Text>
+                  <TouchableOpacity style={styles.linkBtn}>
+                      <Text>Link</Text>
+                  </TouchableOpacity>
+              </View>
+          </View>
 
-        <View style={styles.optionContainer}>
-            <TouchableOpacity style={styles.pricerunnerBtn}>
-                <Image style={styles.pricerunnerIcon} source={require('../assets/images/pricerunnerIcon.png')} />
-            </TouchableOpacity>
+          <View style={styles.optionContainer}>
+              <TouchableOpacity style={styles.pricerunnerBtn}>
+                  <Image style={styles.pricerunnerIcon} source={require('../assets/images/pricerunnerIcon.png')} />
+              </TouchableOpacity>
 
-            <TouchableOpacity style={styles.deleteBtn}>
-                <Image style={styles.deleteIcon} source={require('../assets/images/deleteIcon.png')} />
-            </TouchableOpacity>
-        </View>
-    </View>
+              <TouchableOpacity style={styles.deleteBtn} onPress={handlePresentModalPress}>
+                  <Image style={styles.deleteIcon} source={require('../assets/images/deleteIcon.png')} />
+              </TouchableOpacity>
+          </View>
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            snapPoints={snapPoints}
+            index={0}
+            enablePanDownToClose={true}
+            backgroundStyle={styles.bottomSheetViewContainer}
+          >
+          <BottomSheetView>
+            <DeleteWishModal name={wish.name} confirm={removeWish}/>
+          </BottomSheetView>
+        </BottomSheetModal>
+      </View>
+    </BottomSheetModalProvider>
   )
 }
 
@@ -143,5 +169,8 @@ const styles = StyleSheet.create({
       deleteIcon: {
         height: 30,
         width: 30,
+      },
+      bottomSheetViewContainer: {
+        backgroundColor: colors.wishItemBackground,
       },
 })

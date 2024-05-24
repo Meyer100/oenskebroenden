@@ -9,7 +9,7 @@ import { themeCore } from "../utils/themes.android";
 
 const LoginPage = ({loginUser}) => {
 
-  const [name, setName] = useState("test");
+  const [name, setName] = useState("admin");
   const [password, setPassword] = useState("admin");
   const [rememberMe, setRememberme] = useState(false);
 
@@ -41,7 +41,7 @@ const LoginPage = ({loginUser}) => {
                 <Text style={styles.title}>Velkommen</Text>
                 
                 <View style={styles.inputContainer}>
-                    <TextInput style={styles.input} placeholder='Navn' onChangeText={(text) => setName(text)} value='test' />
+                    <TextInput style={styles.input} placeholder='Navn' onChangeText={(text) => setName(text)} value='admin' />
                     <TextInput style={styles.input} placeholder='Adgangskode' onChangeText={(text) => setPassword(text)} value='admin' secureTextEntry/>
 
                     <View style={styles.optionsContainer}>

@@ -17,23 +17,13 @@ import { themeCore } from "../utils/themes.android";
 import { addWishlistToHistory, createWishlist, getHistoryWishlist, getOneWishlist, getOwnWishlists } from "../services/WishService";
 import SearchModal from "../components/homepage/SearchModal";
 
-const HomePage = ({ user }) => {
+const HomePage = ({ user, wishlist }) => {
 
-  const [wishlist, setWishlist] = useState(null);
   const [historyWishlist, setHistoryWishlist] = useState(null);
     // State holder styr på om modal skal vises
   const [modalVisible, setModalVisible] = useState(false);
 
   const [searchModal, setSearchModal] = useState(false);
-
-  const getWishlists = async () => {
-    await getOwnWishlists(user.token).then(res => {
-      if(res.status == 200) {
-        console.log(res.data[0].wishes[0]);
-        setWishlist(res.data);
-      }
-    })
-  }
 
   const getUserHistoryWishlists = async () => {
     await getHistoryWishlist(user.token).then(res => {
@@ -44,20 +34,12 @@ const HomePage = ({ user }) => {
     })
   }
 
+  
 
   // Henter alle ens ønskelister samt ønsker
   useEffect(() => {
-    getWishlists();
     getUserHistoryWishlists();
   },[]);
-
-  const maadrilla = [
-    { id: 1, name: "Techdddddd", author: "Jonas ItJab Albin", emoji: "📱" },
-    { id: 2, name: "Tech", author: "Jonas ItJab Albin", emoji: "📱" },
-    { id: 6, name: "Tech", author: "Jonas ItJab Albin", emoji: "📱" },
-    { id: 3, name: "Tech", author: "Jonas ItJab Albin", emoji: "📱" },
-    { id: 4, name: "Tech", author: "Jonas ItJab Albin", emoji: "📱" },
-  ];
 
   // Kalder en POST request til api med opret en ny ønskeliste
   const createNewWishlist = async (wishlist) => {
