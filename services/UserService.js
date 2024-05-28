@@ -1,5 +1,7 @@
 import APIManager from "./APIManager";
 
+// Modtager en bruger model, sender en request POST request til api
+// Og får en status kode tilbage
 export const createAccount = async data => {
     try {
        const result = await APIManager("Account/CreateAccount", {
@@ -16,6 +18,8 @@ export const createAccount = async data => {
     }
 }
 
+// Modtager en bruger model, sender en request POST request til api
+// Og får en bruger tilbage
 export const userLogin = async data => {
     try {
         const result = await APIManager(`Account/Login?userName=${data.userName}&password=${data.password}`, {

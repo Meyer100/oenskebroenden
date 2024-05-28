@@ -3,7 +3,7 @@ import React from 'react'
 import { colors } from '../../utils/theme'
 import { Image } from 'expo-image'
 
-const WishItem = ({data, clickEvent}) => {
+const WishItem = ({data, clickEvent, optionsClickEvent}) => {
   return (
     <TouchableOpacity style={styles.container} onPress={clickEvent}>
         <View style={styles.wishContainer}>
@@ -16,7 +16,9 @@ const WishItem = ({data, clickEvent}) => {
             </View>
         </View>
         <View style={styles.optionsContainer}>
-        <Image style={styles.optionsImg} source={require('../../assets/images/optionsIcon.png')} />
+        <TouchableOpacity onPress={optionsClickEvent}>
+            <Image style={styles.optionsImg} source={require('../../assets/images/optionsIcon.png')} />
+        </TouchableOpacity>
         <Image style={styles.optionsImg} source={require('../../assets/images/nextIcon.png')} />
         </View>
     </TouchableOpacity>
@@ -57,6 +59,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 10,
+        opacity: 0.4
     },
     optionsImg: {
         height: 20,

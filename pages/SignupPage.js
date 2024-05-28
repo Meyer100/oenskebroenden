@@ -33,6 +33,7 @@ const SignupPage = () => {
     await createAccount({Name: name, Email: email, Password: password}).then(res => {
         if(res.status == 200) {
             console.log('Konto Oprettet!');
+            navigateToLogin();
         }
     })
   }

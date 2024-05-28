@@ -1,34 +1,19 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import { colors, fontsizes } from '../utils/theme';
-import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet';
-import DeleteWishModal from '../components/showwishpage/DeleteWishModal';
 
-const ShowWishPage = ({user, deleteWish}) => {
+const SharedShowWishPage = ({user}) => {
     const route = useRoute();
     const {wish} = route?.params;
 
 
-    const bottomSheetModalRef = useRef(null);
-    const snapPoints = useMemo(() => ['40%'], []);
-
 
     const nav = useNavigation();
 
-    const handlePresentModalPress = useCallback(() => {
-      bottomSheetModalRef.current?.present();
-    }, []);
-
-    const removeWish = () => {
-      deleteWish(wish.id);
-      nav.pop();
-    }
-
 
   return (
-    <BottomSheetModalProvider>
       <View style={styles.container}>
           <TouchableOpacity onPress={() => nav.pop()}>
             <Image
@@ -58,31 +43,19 @@ const ShowWishPage = ({user, deleteWish}) => {
           </View>
 
           <View style={styles.optionContainer}>
-              <TouchableOpacity style={styles.pricerunnerBtn}>
-                  <Image style={styles.pricerunnerIcon} source={require('../assets/images/pricerunnerIcon.png')} />
+              <TouchableOpacity style={styles.reserveBtn}>
+                  <Text style={styles.reserveText}>Reserver produkt</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.deleteBtn} onPress={handlePresentModalPress}>
-                  <Image style={styles.deleteIcon} source={require('../assets/images/deleteIcon.png')} />
+              <TouchableOpacity style={styles.pricerunnerBtn} onPress={null}>
+                  <Image style={styles.pricerunnerIcon} source={require('../assets/images/pricerunnerIcon.png')} />
               </TouchableOpacity>
           </View>
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            snapPoints={snapPoints}
-            index={0}
-            enablePanDownToClose={true}
-            backgroundStyle={styles.bottomSheetViewContainer}
-          >
-          <BottomSheetView>
-            <DeleteWishModal name={wish.name} confirm={removeWish}/>
-          </BottomSheetView>
-        </BottomSheetModal>
       </View>
-    </BottomSheetModalProvider>
   )
 }
 
-export default ShowWishPage
+export default SharedShowWishPage
 
 const styles = StyleSheet.create({
     container: {
@@ -99,7 +72,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
       },
       title: {
-        fontSize: fontsizes.title - 5,
+        fontSize: fontsizes.title,
       },
       wishContainer: {
         flex: 0.9,
@@ -147,30 +120,30 @@ const styles = StyleSheet.create({
         gap: 20,
         alignItems: 'flex-end',
       },
-      pricerunnerBtn: {
-        backgroundColor: '#101010',
+      reserveBtn: {
+        backgroundColor: colors.buttonPrimary,
         flex: 0.6,
         height: 60,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
-
       },
-      pricerunnerIcon: {
-        height: 50,
-        width: 50,
+      reserveText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
       },
-      deleteBtn: {
-        backgroundColor: colors.wishItemBackground,
+      pricerunnerBtn: {
+        backgroundColor: '#101010',
         flex: 0.4,
         height: 60,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
       },
-      deleteIcon: {
-        height: 30,
-        width: 30,
+      pricerunnerIcon: {
+        height: 50,
+        width: 50,
       },
       bottomSheetViewContainer: {
         backgroundColor: colors.wishItemBackground,

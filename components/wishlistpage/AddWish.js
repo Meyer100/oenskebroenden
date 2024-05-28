@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { Image } from "expo-image";
 import { colors, fontsizes } from "../../utils/theme";
 import { themeCore } from "../../utils/themes.android";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const AddWish = ({addWish, closeModal}) => {
 
@@ -36,7 +37,9 @@ const AddWish = ({addWish, closeModal}) => {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
+      <KeyboardAwareScrollView
+            contentContainerStyle={styles.container}
+            scrollEnabled={true}>
         <TouchableOpacity onPress={closeModal}>
           <Image
             style={styles.backIcon}
@@ -113,7 +116,7 @@ const AddWish = ({addWish, closeModal}) => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 };

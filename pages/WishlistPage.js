@@ -3,16 +3,13 @@ import React, { useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { colors, fontsizes } from '../utils/theme'
 import AddWish from '../components/wishlistpage/AddWish'
-import { createWish } from '../services/WishService'
 import { Image } from 'expo-image'
 import Wish from '../components/wishlistpage/Wish'
 import { themeCore } from "../utils/themes.android";
 
 
-const WishlistPage = ({user}) => {
+const WishlistPage = ({user, addNewWish, wishlist}) => {
   
-  const route = useRoute();
-  const {wishlist} = route?.params;
 
   // State holder styr på om modal skal vises
   const [modalAddWishVisible, setModalAddWishVisible] = useState(false);
@@ -20,11 +17,7 @@ const WishlistPage = ({user}) => {
   
   const addWish = async (data) => {
     data.wishListId = wishlist.id;
-    await createWish(data, user.token).then(res => {
-        if(res.status == 200) {
-            console.log('Ønske tilføjet!');
-        }
-    })
+    addNewWish(data);
   }
   const nav = useNavigation();
 

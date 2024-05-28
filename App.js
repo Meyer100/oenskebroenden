@@ -10,58 +10,86 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import WishlistPage from './pages/WishlistPage';
 import ShowWishPage from './pages/ShowWishPage';
 import ShowWishlistPage from './pages/SharedWishlistPage';
-import { deleteWish, getOwnWishlists } from './services/WishService';
+import { createWish, createWishlist, deleteWish, deleteWishlist, getOwnWishlists } from './services/WishService';
+import SharedShowWishPage from './pages/SharedShowWishPage';
+import ChatPage from './pages/ChatPage';
 
 export default function App() {
 
+  // Disse variabler fungere som globale, da de bliver sendt rundt til de forskellige sider
   const [user, setUser] = useState(null);
   const [wishlist, setWishlist] = useState(null);
+  const [selectedWishlist, setSelectedWishlist] = useState(null);
   
 
   // UseEffect er et hook som kører efter første render og hver render derefter
   // For at forstå hvordan useEffect hook fungerer skal vi break den lidt ned
-  // Første argument er den effect/kode vi vil køre. Derefter tager den imod en array af dependencies
+  // Første argument er den effect/kode vi vil køre. Derefter tager den imod et array af dependencies
   // Når array'et er tomt skal den kun køre efter intial render, ellers skal den køre hver gang en dependency bliver opdateret
   useEffect(() => {
 
     retriveUserData();
   }, [])
 
+  // Her gør vi så brug af user dependencies array'et, vi ønsker at for hver gang user bliver opdateret, så skal det inde i useEffect køre
+  // Nu er eksempelt her meget småt, men den ville kunne bruges på 2 måder. 1 hent brugens ønskelister når han logger ind.
+  /// 2. Fjern ønskelisterne fra wishlist state, når brugeren logger ud.
   useEffect(() => {
     if(user) {
       getWishlists();
     }
   }, [user])
 
+  // Henter brugerens data fra både AsyncStorage, og SecureStorage (læs på produktrapporten)
   const retriveUserData = async () => {
-    const jwtToken = await SecureStore.getItemAsync('jwt');
-    const lifespan = await SecureStore.getItemAsync('jwtlifespan');
-    const name = await AsyncStorage.getItem('name');
-    const id = await AsyncStorage.getItem('id');
-    console.log(lifespan);
-    console.log(new Date());
-    if(jwtToken || lifespan || name || id) {
-        const jwtlifespan = new Date(lifespan);
-        if(new Date() > jwtlifespan) {
-          console.log('jeg er allerde for gammel :/');
-            await handleUserLoginStateAsync();
-            return;
-        }
-        setUser({name: name, token: jwtToken, id: Number(id)});
-        //await handleUserLoginStateAsync();
+    try {
+      const jwtToken = await SecureStore.getItemAsync('jwt');
+      const lifespan = await SecureStore.getItemAsync('jwtlifespan');
+      const name = await AsyncStorage.getItem('name');
+      const id = await AsyncStorage.getItem('id');
+      if(jwtToken || lifespan || name || id) {
+          const jwtlifespan = new Date(lifespan);
+          if(new Date() > jwtlifespan) {
+            console.log('jeg er allerde for gammel :/');
+              await handleUserLoginStateAsync();
+              return;
+          }
+          //setUser({name: name, token: jwtToken, id: Number(id)});
+          await handleUserLoginStateAsync();
+      }
     }
-    console.log('kørt!');
+    catch {
+
+    }
+
     return;
   }
 
+  // Henter alle ønskelister
   const getWishlists = async () => {
-  await getOwnWishlists(user.token).then(res => {
-    if(res.status == 200) {
-      console.log(res.data[0].wishes[0]);
-      setWishlist(res.data);
+    try {
+      const res = await getOwnWishlists(user.token);
+      if (res && res.status === 200) {
+        setWishlist(res.data);
+      } else {
+        console.error('Failed to fetch wishlists:', res.status);
+      }
+    } catch (error) {
     }
-  })
+  };
+  
+  const getUpdatedWishlist = async () => {
+    try {
+      const res = await getOwnWishlists(user.token);
+      if (res && res.status === 200) {
+        setWishlist(res.data);
+        return res.data;
+      }
+    } catch (error) {
+      console.error('Failed to fetch wishlists:', error);
+    }
   }
+  
 
   const removeWish = async (id) => {
     await deleteWish(user.token, id).then(res => {
@@ -69,6 +97,15 @@ export default function App() {
         console.log(wishlist);
         removeWishFromWishlist(id);
         console.log('Fjernet!');
+      }
+    })
+  }
+
+  const removeWishlist = async (id) => {
+    await deleteWishlist(user.token, id).then(res => {
+      if(res.status == 200) {
+        console.log('Fjernet ønskeliste');
+        setWishlist(wishlist.filter(wishlist => wishlist.id !== id));
       }
     })
   }
@@ -89,14 +126,46 @@ export default function App() {
       }
     }
   };
+
+    // Kalder en POST request til api med opret en ny ønskeliste
+    const createNewWishlist = async (wishlist) => {
+      await createWishlist(wishlist, user.token)
+        .then((res) => {
+          if (res.status == 200) {
+            getWishlists();
+          }
+        })
+    };
+
+
+    const addNewWish = async (data) => {
+      try {
+          const res = await createWish(data, user.token);
+          if (res && res.status == 200) {
+              const result = await getUpdatedWishlist();
+              const temp = result.find(wishlist => wishlist.id === selectedWishlist.id);
+              setSelectedWishlist(temp);
+          }
+      } catch (error) {
+          console.error('Fejl i tilføjelse af ny ønskeliste');
+      }
+  }
+  
+    
   
 
 
 
   // Funktion kan både logge en bruger ind, samt fjerne hans login detaljer
   // baseret på data argumentet
-  const handleUserLoginStateAsync = async (data) => {
+  const handleUserLoginStateAsync = async (data, stayLoggedIn) => {
+
+
     if(data) {
+      if(!stayLoggedIn) {
+        setUser({name: data.name, token: data.token, id: Number(data.id)});
+        return;
+      }
         await SecureStore.setItemAsync('jwt', data.token);
         await SecureStore.setItemAsync('jwtlifespan', data.tokenExpires);
         await AsyncStorage.setItem('name', data.name);
@@ -118,7 +187,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName='Login'>
           <Stack.Screen name='Login'>
-          {props => <LoginPage loginUser={(data) => handleUserLoginStateAsync(data)} />}
+          {props => <LoginPage loginUser={(data, stayLoggedIn) => handleUserLoginStateAsync(data, stayLoggedIn)} />}
           </Stack.Screen>
           <Stack.Screen name='Signup' component={SignupPage} />
         </Stack.Navigator>
@@ -130,16 +199,22 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName='Home'>
           <Stack.Screen name='Home'>
-            {props => <HomePage user={user} wishlist={wishlist}/>}
+            {props => <HomePage user={user} wishlist={wishlist} removeWishlist={(id) => removeWishlist(id)} createNewWishlist={(wishlist) => createNewWishlist(wishlist)} wishlistSelected={(wishlist) => setSelectedWishlist(wishlist)} />}
           </Stack.Screen>
           <Stack.Screen name='Wishlist'>
-            {props => <WishlistPage user={user}/>}
+            {props => <WishlistPage user={user} addNewWish={(wish) => addNewWish(wish)} wishlist={selectedWishlist}/>}
           </Stack.Screen>
           <Stack.Screen name='ShowWish'>
             {props => <ShowWishPage user={user} deleteWish={(id) => removeWish(id)}/>}
           </Stack.Screen>
           <Stack.Screen name='SharedWishlistPage'>
             {props => <ShowWishlistPage user={user}/>}
+          </Stack.Screen>
+          <Stack.Screen name='SharedShowWishPage'>
+            {props => <SharedShowWishPage user={user}/>}
+          </Stack.Screen>
+          <Stack.Screen name='ChatPage'>
+            {props => <ChatPage user={user}/>}
           </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
