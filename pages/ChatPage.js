@@ -24,27 +24,6 @@ const ChatPage = ({ user }) => {
   const [inputMessage, setInputMessage] = useState(null);
 
   const nav = useNavigation();
-  
-
-  const testlist = [
-    {
-      id: 0,
-      senderId: 3,
-      senderName: "Piet",
-      message:
-        "Jeg vil gerne splitte den drone som mads har på listen nogen der er intra?",
-      time: Date.now(Date.now() - 60000),
-      lobbyId: 1,
-    },
-    {
-      id: 1,
-      senderId: 2,
-      senderName: "Mads",
-      message: "Say less buddy",
-      time: Date.now(),
-      lobbyId: 1,
-    },
-  ];
 
 
   useEffect(() => {

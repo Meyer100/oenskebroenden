@@ -148,3 +148,39 @@ export const deleteWishlist = async (token, id) => {
        console.log(error)
     }
 }
+
+// Modtager id'et på den ønsket og brugerens jwt token, sender en request PUT request til api ?? dette burde være en POST
+// Og får en status kode tilbage
+export const reserveWish = async (wishId, token) => {
+    try {
+       const result = await APIManager(`Wish/ReserveWish?wishId=${wishId}`, {
+           method: 'PUT',
+           headers: {
+               'content-type':'application/json',
+               'Authorization': `Bearer ${token}`
+           },
+       });
+       return result;
+    }
+    catch (error) {
+       console.log(error)
+    }
+}
+
+// Modtager brugerens jwt token og url til den ønsket web scraping side, sender en request PUT request til api ?? dette burde være en POST
+// Og får en status kode tilbage
+export const scrapeWishFromWeb = async (token, url) => {
+    try {
+       const result = await APIManager(`Wish/GetWishFromWeb?url=${url}`, {
+           method: 'GET',
+           headers: {
+               'content-type':'application/json',
+               'Authorization': `Bearer ${token}`
+           },
+       });
+       return result;
+    }
+    catch (error) {
+       console.log(error)
+    }
+}

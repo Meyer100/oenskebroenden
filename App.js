@@ -54,8 +54,8 @@ export default function App() {
               await handleUserLoginStateAsync();
               return;
           }
-          //setUser({name: name, token: jwtToken, id: Number(id)});
-          await handleUserLoginStateAsync();
+          setUser({name: name, token: jwtToken, id: Number(id)});
+          //await handleUserLoginStateAsync();
       }
     }
     catch {

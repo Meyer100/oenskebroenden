@@ -5,6 +5,7 @@ import { Image } from 'expo-image';
 import { colors, fontsizes } from '../utils/theme';
 import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet';
 import DeleteWishModal from '../components/showwishpage/DeleteWishModal';
+import * as WebBrowser from 'expo-web-browser';
 
 const ShowWishPage = ({user, deleteWish}) => {
     const route = useRoute();
@@ -24,6 +25,10 @@ const ShowWishPage = ({user, deleteWish}) => {
     const removeWish = () => {
       deleteWish(wish.id);
       nav.pop();
+    }
+
+    const openLink = async () => {
+      await WebBrowser.openBrowserAsync(wish.link);
     }
 
 
@@ -51,8 +56,9 @@ const ShowWishPage = ({user, deleteWish}) => {
 
               <View style={styles.priceContainer}>
                   <Text style={styles.price}>Kr. {wish.price}</Text>
-                  <TouchableOpacity style={styles.linkBtn}>
+                  <TouchableOpacity style={styles.linkBtn} onPress={openLink}>
                       <Text>Link</Text>
+                      <Image style={styles.linkIcon} source={require('../assets/images/linkIcon.png')}/>
                   </TouchableOpacity>
               </View>
           </View>
@@ -141,6 +147,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
+        flexDirection: 'row',
+        gap: 5,
+      },
+      linkIcon: {
+        height: 10,
+        width: 10,
       },
       optionContainer: {
         flexDirection: 'row',

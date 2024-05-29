@@ -6,6 +6,7 @@ import AddWish from '../components/wishlistpage/AddWish'
 import { Image } from 'expo-image'
 import Wish from '../components/wishlistpage/Wish'
 import { themeCore } from "../utils/themes.android";
+import { scrapeWishFromWeb } from '../services/WishService'
 
 
 const WishlistPage = ({user, addNewWish, wishlist}) => {
@@ -13,6 +14,7 @@ const WishlistPage = ({user, addNewWish, wishlist}) => {
 
   // State holder styr på om modal skal vises
   const [modalAddWishVisible, setModalAddWishVisible] = useState(false);
+  const [webscrapeContent, setWebscrapeContent] = useState(null);
   
   
   const addWish = async (data) => {
@@ -29,6 +31,12 @@ const WishlistPage = ({user, addNewWish, wishlist}) => {
 
   const navigateBack = () => {
     nav.pop();
+  }
+
+  const getWebResults = async (url) => {
+    const result = await scrapeWishFromWeb(user.token, url);
+    setWebscrapeContent(result.data);
+    console.log(result.data);
   }
 
   return (
@@ -71,7 +79,7 @@ const WishlistPage = ({user, addNewWish, wishlist}) => {
       
       
       <Modal visible={modalAddWishVisible} animationType='slide'>
-        <AddWish addWish={(param) => addWish(param)}  closeModal={() => setModalAddWishVisible(false)}/>
+        <AddWish addWish={(param) => addWish(param)}  closeModal={() => setModalAddWishVisible(false)} getWebResults={(url) => getWebResults(url)} webscrapeContent={webscrapeContent}/>
       </Modal>
 
 

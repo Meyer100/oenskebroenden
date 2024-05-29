@@ -6,6 +6,7 @@ import AddWish from '../components/wishlistpage/AddWish'
 import { createWish } from '../services/WishService'
 import { Image } from 'expo-image'
 import Wish from '../components/wishlistpage/Wish'
+import SharedWish from '../components/sharedwishlistpage/SharedWish'
 
 const SharedWishlistPage = ({user}) => {
   
@@ -50,7 +51,7 @@ const SharedWishlistPage = ({user}) => {
           <FlatList 
             data={wishlist.wishes}
             renderItem={({item}) => {
-              return <Wish wish={item} navigateToWish={() => navigateToShowWishPage(item)}/>
+              return <SharedWish wish={item} isReserved={item.reservedUserId == null ? null : item.reservedUserId == user.id} navigateToWish={() => navigateToShowWishPage(item)}/>
             }}
             keyExtractor={(item) => item.id}
             numColumns={2}

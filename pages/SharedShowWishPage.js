@@ -1,17 +1,43 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import { colors, fontsizes } from '../utils/theme';
+import * as WebBrowser from 'expo-web-browser';
+import { reserveWish } from '../services/WishService';
+
 
 const SharedShowWishPage = ({user}) => {
+
+    const [isReservedByMe, setIsReservedByMe] = useState(null);
+
     const route = useRoute();
     const {wish} = route?.params;
 
-
-
     const nav = useNavigation();
 
+    const openLink = async () => {
+      await WebBrowser.openBrowserAsync(wish.link);
+    }
+
+    useEffect(() => {
+      if(wish.reservedUserId != null) {
+        if(wish.reservedUserId == user.id) {
+          setIsReservedByMe(true);
+        }
+        else {
+          setIsReservedByMe(false);
+        }
+      }
+    }, [])
+
+    const reserveOneWish = async () => {
+      await reserveWish(wish.id, user.token).then(res => {
+        if(res && res.status == 200) {
+          setIsReservedByMe(true);
+        }
+      })
+    }
 
   return (
       <View style={styles.container}>
@@ -36,15 +62,16 @@ const SharedShowWishPage = ({user}) => {
 
               <View style={styles.priceContainer}>
                   <Text style={styles.price}>Kr. {wish.price}</Text>
-                  <TouchableOpacity style={styles.linkBtn}>
+                  <TouchableOpacity style={styles.linkBtn} onPress={openLink}>
                       <Text>Link</Text>
+                      <Image style={styles.linkIcon} source={require('../assets/images/linkIcon.png')}/>
                   </TouchableOpacity>
               </View>
           </View>
 
           <View style={styles.optionContainer}>
-              <TouchableOpacity style={styles.reserveBtn}>
-                  <Text style={styles.reserveText}>Reserver produkt</Text>
+              <TouchableOpacity style={[styles.reserveBtn, {backgroundColor: isReservedByMe == null ? colors.buttonPrimary : colors.textGray}]} onPress={reserveOneWish} disabled={isReservedByMe != null}>
+                  <Text style={styles.reserveText}>{isReservedByMe != null ? isReservedByMe ? "Du har reserveret" : "Allerede reserveret" : "Reserver Produkt"}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.pricerunnerBtn} onPress={null}>
@@ -114,6 +141,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
+        flexDirection: 'row',
+        gap: 5,
+      },
+      linkIcon: {
+        height: 10,
+        width: 10,
       },
       optionContainer: {
         flexDirection: 'row',
@@ -121,7 +154,6 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
       },
       reserveBtn: {
-        backgroundColor: colors.buttonPrimary,
         flex: 0.6,
         height: 60,
         justifyContent: 'center',
