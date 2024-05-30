@@ -33,6 +33,7 @@ const AddWish = ({addWish, closeModal, webscrapeContent, getWebResults}) => {
       }
     },[webscrapeContent])
 
+    // Kalder addwish argumentet med wishOjbect
     const addNewWish = () => {
       if(name && description && price && link && pictureURL) {
         const wishObject = {
@@ -52,6 +53,7 @@ const AddWish = ({addWish, closeModal, webscrapeContent, getWebResults}) => {
         closeModal();
     }
 
+    // henter web results fra den url bruger har indtastet
     const scrapeWebForResults = () => {
       if(itemUrl && !manualIsSelected){
         getWebResults(itemUrl);

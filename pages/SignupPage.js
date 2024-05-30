@@ -4,7 +4,6 @@ import { Image } from 'expo-image';
 import { colors, fontsizes } from '../utils/theme';
 import { useNavigation } from '@react-navigation/native';
 import { createAccount } from '../services/UserService';
-import { themeCore } from "../utils/themes.android";
 
 const SignupPage = () => {
   const nav = useNavigation();
@@ -48,7 +47,7 @@ const SignupPage = () => {
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.input} placeholder='Navn' onChangeText={(text) => setName(text)} />
                     <TextInput style={styles.input} placeholder='Email' onChangeText={(text) => setEmail(text)}/>
-                    <TextInput style={styles.input} placeholder='Adgangskode' onChangeText={(text) => setPassword(text)}/>
+                    <TextInput style={styles.input} placeholder='Adgangskode' onChangeText={(text) => setPassword(text)} secureTextEntry/>
                     {error ? <Text style={styles.errorText}>{error}</Text> : null}
                     <View style={styles.optionsContainer}>
                         <TouchableOpacity onPress={navigateToLogin}>

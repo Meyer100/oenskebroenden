@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { colors, fontsizes } from "../utils/theme";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
@@ -19,10 +19,10 @@ import SearchModal from "../components/homepage/SearchModal";
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
 import WishlistOptions from "../components/homepage/WishlistOptions";
 
-const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistSelected }) => {
+const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistSelected, logout }) => {
 
   const [historyWishlist, setHistoryWishlist] = useState(null);
-    // State holder styr på om modal skal vises
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const [searchModal, setSearchModal] = useState(false);
@@ -32,11 +32,13 @@ const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistS
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['40%'], []);
 
+  // Åbner for en modal
   const handlePresentModalPress = (wishlist) => {
     setSelectedWishlist(wishlist);
     bottomSheetModalRef.current?.present();
   };
 
+  // Henter alle brugerens delete ønskelister
   const getUserHistoryWishlists = async () => {
     await getHistoryWishlist(user.token).then(res => {
       if(res && res.status == 200) {
@@ -53,12 +55,13 @@ const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistS
   },[]);
 
 
+  // Kalder createNewWishlist arg med en ønskeliste, og fjerner modal
   const createWishlist = async (wishlist) => {
     createNewWishlist(wishlist);
     setModalVisible(false);
   };
 
-  // Metode henter en ønskeliste fra en anden bruger og gemmer i historik
+  // funktion henter en ønskeliste fra en anden bruger og gemmer i historik
   const getWishlist = async (id) => {
     await getOneWishlist(user.token, id).then(async res => {
       if(res && res.status == 200) {
@@ -74,6 +77,7 @@ const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistS
     })
   }
 
+  // funktion fjerner en ønskeliste
   const deleteOneWishlist = () => {
     if(selectedWishlist) {
       bottomSheetModalRef.current?.dismiss();
@@ -81,8 +85,12 @@ const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistS
     }
   }
 
+  const logoutUser = () => {
+    logout();
+  }
 
   const nav = useNavigation();
+  // funktion navigerer til wishpage
   const navigateToWishlistPage = (wishlist) => {
     if(wishlist) {
       wishlistSelected(wishlist);
@@ -90,6 +98,7 @@ const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistS
     }
   }
 
+  // funktion navigere til sharedWishListPage
   const navigateToSharedWishlistPage = (wishlist) => {
     if(wishlist) {
       nav.navigate('SharedWishlistPage', {wishlist: wishlist});
@@ -100,6 +109,12 @@ const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistS
   return (
     <BottomSheetModalProvider>
       <View style={styles.container}>
+
+        <View style={styles.logoutContainer}>
+          <TouchableOpacity onPress={logoutUser}>
+            <Image style={styles.logoutIcon} source={require('../assets/images/logoutIcon.png')} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Ønskelister</Text>
         </View>
@@ -194,6 +209,13 @@ const styles = StyleSheet.create({
 
     paddingHorizontal: 20,
     gap: 30,
+  },
+  logoutContainer: {
+    alignItems: 'flex-end',
+  },
+  logoutIcon: {
+    height: 20,
+    width: 20,
   },
   titleContainer: {
     justifyContent: "center",

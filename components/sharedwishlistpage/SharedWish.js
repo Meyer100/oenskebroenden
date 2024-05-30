@@ -2,7 +2,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Image } from 'expo-image'
 import { colors } from '../../utils/theme'
-import { themeCore } from "../../utils/themes.android";
 const SharedWish = ({wish, navigateToWish, isReserved}) => {
 
       // Her forkorter jeg strengen hvis den har en længe på over 9

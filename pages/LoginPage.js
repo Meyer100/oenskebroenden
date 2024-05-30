@@ -4,22 +4,21 @@ import { Image } from 'expo-image';
 import { colors, fontsizes } from '../utils/theme';
 import { useNavigation } from '@react-navigation/native';
 import { userLogin } from '../services/UserService';
-import { themeCore } from "../utils/themes.android";
 
 
 const LoginPage = ({loginUser}) => {
 
-  const [name, setName] = useState("admin");
-  const [password, setPassword] = useState("admin");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberme] = useState(false);
 
-
+    // funktion logger bruger ind
   const signInUserAsync = async () => {
     await userLogin({
         userName: name,
         password: password
     }).then(res => {
-        if(res.status == 200) {
+        if(res && res.status == 200) {
             loginUser(res.data, rememberMe);
         }
     })
@@ -27,6 +26,7 @@ const LoginPage = ({loginUser}) => {
 
   const nav = useNavigation();
 
+  // navigere til signup siden
   const navigateToSignup = () => {
     nav.navigate('Signup');
   }
@@ -39,8 +39,8 @@ const LoginPage = ({loginUser}) => {
                 <Text style={styles.title}>Velkommen</Text>
                 
                 <View style={styles.inputContainer}>
-                    <TextInput style={styles.input} placeholder='Navn' onChangeText={(text) => setName(text)} value='admin' />
-                    <TextInput style={styles.input} placeholder='Adgangskode' onChangeText={(text) => setPassword(text)} value='admin' secureTextEntry/>
+                    <TextInput style={styles.input} placeholder='Navn' onChangeText={(text) => setName(text)} />
+                    <TextInput style={styles.input} placeholder='Adgangskode' onChangeText={(text) => setPassword(text)} secureTextEntry/>
 
                     <View style={styles.optionsContainer}>
                         <TouchableOpacity style={styles.checkBoxContainer} onPress={() => setRememberme(!rememberMe)}>

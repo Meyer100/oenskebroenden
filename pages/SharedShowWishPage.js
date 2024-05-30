@@ -16,10 +16,12 @@ const SharedShowWishPage = ({user}) => {
 
     const nav = useNavigation();
 
+    // Åbner link i default browser
     const openLink = async () => {
       await WebBrowser.openBrowserAsync(wish.link);
     }
 
+    // Tjekker om man selv har reserveret et ønske, eller om et ønske er reserveret af en anden
     useEffect(() => {
       if(wish.reservedUserId != null) {
         if(wish.reservedUserId == user.id) {
@@ -31,6 +33,7 @@ const SharedShowWishPage = ({user}) => {
       }
     }, [])
 
+    // Reserverer et ønske
     const reserveOneWish = async () => {
       await reserveWish(wish.id, user.token).then(res => {
         if(res && res.status == 200) {

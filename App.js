@@ -55,7 +55,6 @@ export default function App() {
               return;
           }
           setUser({name: name, token: jwtToken, id: Number(id)});
-          //await handleUserLoginStateAsync();
       }
     }
     catch {
@@ -176,7 +175,8 @@ export default function App() {
         await SecureStore.deleteItemAsync('jwt');
         await SecureStore.deleteItemAsync('jwtlifespan');
         await AsyncStorage.removeItem('name');
-        await AsyncStorage.removeItem('id') 
+        await AsyncStorage.removeItem('id');
+        setUser(null);
     }
   }
 
@@ -199,7 +199,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName='Home'>
           <Stack.Screen name='Home'>
-            {props => <HomePage user={user} wishlist={wishlist} removeWishlist={(id) => removeWishlist(id)} createNewWishlist={(wishlist) => createNewWishlist(wishlist)} wishlistSelected={(wishlist) => setSelectedWishlist(wishlist)} />}
+            {props => <HomePage user={user} wishlist={wishlist} removeWishlist={(id) => removeWishlist(id)} createNewWishlist={(wishlist) => createNewWishlist(wishlist)} wishlistSelected={(wishlist) => setSelectedWishlist(wishlist)} logout={handleUserLoginStateAsync} />}
           </Stack.Screen>
           <Stack.Screen name='Wishlist'>
             {props => <WishlistPage user={user} addNewWish={(wish) => addNewWish(wish)} wishlist={selectedWishlist}/>}

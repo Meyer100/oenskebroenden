@@ -29,11 +29,12 @@ const ChatPage = ({ user }) => {
   useEffect(() => {
     getPreviousChat();
     
-    // Function to set up listeners and join the lobby
+    // Funktion til at sætte listener op og tilslutte lobby
     const setupConnection = async () => {
       try {
           await joinLobby(wishlistId);
           console.log('Du er inde!');
+          // Connection.on subscriber på ReciveMessage fra chathubben. Når den bliver triggeret går den ned i reciveMessage 
           connection.on('ReciveMessage', reciveMessage);
       } catch (error) {
           console.log('Virker ik!', error);
@@ -50,6 +51,7 @@ const ChatPage = ({ user }) => {
     };
   },[])
 
+  // Henter alle nye beskeder
   const reciveMessage = (data) => {
     setMessages(prevMessages => [
         ...prevMessages,
@@ -73,6 +75,7 @@ const ChatPage = ({ user }) => {
       ]);
   }
 
+  // funktion henter tidligere chatbeskeder
   const getPreviousChat = async () => {
     await getAllChatMessageFromOneWishlist(user.token, wishlistId).then(res => {
         if(res.status == 200) {
@@ -81,6 +84,7 @@ const ChatPage = ({ user }) => {
     })
   }
 
+  // funktion til at sende en besked ud til hubben, samt gemme den på api
   const sendMessage = async () => {
 
     if(!inputMessage || !wishlistId || !user) {

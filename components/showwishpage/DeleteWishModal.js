@@ -1,6 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { colors } from '../../utils/theme'
 import { Image } from 'expo-image'
 
 const DeleteWishModal = ({name, confirm}) => {

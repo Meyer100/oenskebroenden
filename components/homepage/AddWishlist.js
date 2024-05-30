@@ -16,11 +16,13 @@ const AddWishlist = ({createWishlist, closeModal}) => {
     setSelectEmoji(false);
   }
 
+  // Fjerner keyboard og emoji popup
   const removeKeyboardAndEmoji = () => {
     Keyboard.dismiss();
     setSelectEmoji(false);
   }
-
+  
+  // Kalder argument createWishlist med wishlist objektet
   const addNewWishlist = () => {
     // Tilføj error handling!
     const wishlist = {

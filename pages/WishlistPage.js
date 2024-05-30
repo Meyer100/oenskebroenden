@@ -1,6 +1,6 @@
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { colors, fontsizes } from '../utils/theme'
 import AddWish from '../components/wishlistpage/AddWish'
 import { Image } from 'expo-image'
@@ -16,13 +16,14 @@ const WishlistPage = ({user, addNewWish, wishlist}) => {
   const [modalAddWishVisible, setModalAddWishVisible] = useState(false);
   const [webscrapeContent, setWebscrapeContent] = useState(null);
   
-  
+  // Tilføjer et ønske
   const addWish = async (data) => {
     data.wishListId = wishlist.id;
     addNewWish(data);
   }
   const nav = useNavigation();
 
+  // Navigere til showWish
   const navigateToShowWishPage = (wish) => {
     if(wish) {
       nav.navigate('ShowWish', {wish: wish});
@@ -33,10 +34,12 @@ const WishlistPage = ({user, addNewWish, wishlist}) => {
     nav.pop();
   }
 
+  // Får fat i resultater fra det valgte url
   const getWebResults = async (url) => {
     const result = await scrapeWishFromWeb(user.token, url);
-    setWebscrapeContent(result.data);
-    console.log(result.data);
+    if(result) {
+      setWebscrapeContent(result.data);
+    }
   }
 
   return (

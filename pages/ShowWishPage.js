@@ -1,9 +1,9 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import { colors, fontsizes } from '../utils/theme';
-import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet';
 import DeleteWishModal from '../components/showwishpage/DeleteWishModal';
 import * as WebBrowser from 'expo-web-browser';
 
@@ -18,15 +18,18 @@ const ShowWishPage = ({user, deleteWish}) => {
 
     const nav = useNavigation();
 
+    // Åbner bottomsheet modal
     const handlePresentModalPress = useCallback(() => {
       bottomSheetModalRef.current?.present();
     }, []);
 
+    // funktion fjernet et ønske og popper siden
     const removeWish = () => {
       deleteWish(wish.id);
       nav.pop();
     }
 
+    // Åbner link
     const openLink = async () => {
       await WebBrowser.openBrowserAsync(wish.link);
     }

@@ -1,30 +1,25 @@
-import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { colors, fontsizes } from '../utils/theme'
-import AddWish from '../components/wishlistpage/AddWish'
-import { createWish } from '../services/WishService'
 import { Image } from 'expo-image'
-import Wish from '../components/wishlistpage/Wish'
 import SharedWish from '../components/sharedwishlistpage/SharedWish'
 
 const SharedWishlistPage = ({user}) => {
   
   const route = useRoute();
   const {wishlist} = route?.params;
-
-  useEffect(() => {
-    console.log(wishlist);
-  },[])
   
   const nav = useNavigation();
 
+  // navigerer til sharedShowWishPage
   const navigateToShowWishPage = (wish) => {
     if(wish) {
       nav.navigate('SharedShowWishPage', {wish: wish});
     }
   }
 
+  // Navigere til ChatPage
   const navigateToChatPage = () => {
     nav.navigate('ChatPage', {wishlistId: wishlist.id})
   }
@@ -103,7 +98,7 @@ const styles = StyleSheet.create({
         bottom: '5%',
         right: '10%',
         backgroundColor: colors.wishItemBackground,
-        borderRadius: '100%',
+        borderRadius: 30,
         height: 55,
         width: 55,
         justifyContent: 'center',

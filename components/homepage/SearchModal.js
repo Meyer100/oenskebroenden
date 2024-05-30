@@ -6,6 +6,7 @@ const SearchModal = ({closeModal, getwishList}) => {
 
   const [id, setId] = useState(0);
 
+  // Henter og gemmer en delt ønskeliste
   const getandAddToHistory = () => {
     if(id > 0) {
         getwishList(id);
