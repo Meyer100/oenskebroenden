@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import WishlistPage from './pages/WishlistPage';
 import ShowWishPage from './pages/ShowWishPage';
 import ShowWishlistPage from './pages/SharedWishlistPage';
-import { createWish, createWishlist, deleteWish, deleteWishlist, getOwnWishlists } from './services/WishService';
+import { createWish, createWishlist, deleteWish, deleteWishlist, getHistoryWishlist, getOwnWishlists } from './services/WishService';
 import SharedShowWishPage from './pages/SharedShowWishPage';
 import ChatPage from './pages/ChatPage';
 
@@ -20,6 +20,10 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [wishlist, setWishlist] = useState(null);
   const [selectedWishlist, setSelectedWishlist] = useState(null);
+
+  const [historyWishlist, setHistoryWishlist] = useState(null);
+  const [selectedHistoryWishlist, setSelectedHistoryWishlist] = useState(null);
+
   
 
   // UseEffect er et hook som kører efter første render og hver render derefter
@@ -37,6 +41,7 @@ export default function App() {
   useEffect(() => {
     if(user) {
       getWishlists();
+      getUserHistoryWishlists();
     }
   }, [user])
 
@@ -89,6 +94,24 @@ export default function App() {
     }
   }
   
+    // Henter alle brugerens delete ønskelister
+    const getUserHistoryWishlists = async () => {
+      try {
+        const result = await getHistoryWishlist(user.token);
+        if(result && result.status == 200) {
+          setHistoryWishlist(result.data);
+          if(selectedHistoryWishlist) {
+            const temp = result.data.find((item) => item.wishList.id === selectedHistoryWishlist.id);
+            setSelectedHistoryWishlist(temp.wishList);
+          }
+
+        }
+      }
+      catch (error) {
+
+      }
+    }
+
 
   const removeWish = async (id) => {
     await deleteWish(user.token, id).then(res => {
@@ -177,6 +200,10 @@ export default function App() {
         await AsyncStorage.removeItem('name');
         await AsyncStorage.removeItem('id');
         setUser(null);
+        setHistoryWishlist(null);
+        setSelectedHistoryWishlist(null);
+        setWishlist(null);
+        setSelectedWishlist(null);
     }
   }
 
@@ -199,7 +226,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName='Home'>
           <Stack.Screen name='Home'>
-            {props => <HomePage user={user} wishlist={wishlist} removeWishlist={(id) => removeWishlist(id)} createNewWishlist={(wishlist) => createNewWishlist(wishlist)} wishlistSelected={(wishlist) => setSelectedWishlist(wishlist)} logout={handleUserLoginStateAsync} />}
+            {props => <HomePage user={user} wishlist={wishlist} removeWishlist={(id) => removeWishlist(id)} createNewWishlist={(wishlist) => createNewWishlist(wishlist)} wishlistSelected={(wishlist) => setSelectedWishlist(wishlist)} logout={handleUserLoginStateAsync} historyWishlist={historyWishlist} historyWishlistSelected={(wishlist) => setSelectedHistoryWishlist(wishlist)} />}
           </Stack.Screen>
           <Stack.Screen name='Wishlist'>
             {props => <WishlistPage user={user} addNewWish={(wish) => addNewWish(wish)} wishlist={selectedWishlist}/>}
@@ -208,10 +235,10 @@ export default function App() {
             {props => <ShowWishPage user={user} deleteWish={(id) => removeWish(id)}/>}
           </Stack.Screen>
           <Stack.Screen name='SharedWishlistPage'>
-            {props => <ShowWishlistPage user={user}/>}
+            {props => <ShowWishlistPage user={user} wishlist={selectedHistoryWishlist}/>}
           </Stack.Screen>
           <Stack.Screen name='SharedShowWishPage'>
-            {props => <SharedShowWishPage user={user}/>}
+            {props => <SharedShowWishPage user={user} wishReserved={getUserHistoryWishlists}/>}
           </Stack.Screen>
           <Stack.Screen name='ChatPage'>
             {props => <ChatPage user={user}/>}

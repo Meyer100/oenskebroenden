@@ -19,9 +19,7 @@ import SearchModal from "../components/homepage/SearchModal";
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
 import WishlistOptions from "../components/homepage/WishlistOptions";
 
-const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistSelected, logout }) => {
-
-  const [historyWishlist, setHistoryWishlist] = useState(null);
+const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistSelected, logout, historyWishlist, historyWishlistSelected }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -38,21 +36,9 @@ const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistS
     bottomSheetModalRef.current?.present();
   };
 
-  // Henter alle brugerens delete ønskelister
-  const getUserHistoryWishlists = async () => {
-    await getHistoryWishlist(user.token).then(res => {
-      if(res && res.status == 200) {
-        setHistoryWishlist(res.data);
-      }
-    })
-  }
 
   
 
-  // Henter alle ens ønskelister samt ønsker
-  useEffect(() => {
-    getUserHistoryWishlists();
-  },[]);
 
 
   // Kalder createNewWishlist arg med en ønskeliste, og fjerner modal
@@ -101,7 +87,8 @@ const HomePage = ({ user, wishlist, removeWishlist, createNewWishlist, wishlistS
   // funktion navigere til sharedWishListPage
   const navigateToSharedWishlistPage = (wishlist) => {
     if(wishlist) {
-      nav.navigate('SharedWishlistPage', {wishlist: wishlist});
+      historyWishlistSelected(wishlist);
+      nav.navigate('SharedWishlistPage');
     }
   }
 

@@ -7,7 +7,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { reserveWish } from '../services/WishService';
 
 
-const SharedShowWishPage = ({user}) => {
+const SharedShowWishPage = ({user, wishReserved}) => {
 
     const [isReservedByMe, setIsReservedByMe] = useState(null);
 
@@ -37,6 +37,7 @@ const SharedShowWishPage = ({user}) => {
     const reserveOneWish = async () => {
       await reserveWish(wish.id, user.token).then(res => {
         if(res && res.status == 200) {
+          wishReserved();
           setIsReservedByMe(true);
         }
       })

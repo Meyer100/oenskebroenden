@@ -5,10 +5,8 @@ import { colors, fontsizes } from '../utils/theme'
 import { Image } from 'expo-image'
 import SharedWish from '../components/sharedwishlistpage/SharedWish'
 
-const SharedWishlistPage = ({user}) => {
+const SharedWishlistPage = ({user, wishlist}) => {
   
-  const route = useRoute();
-  const {wishlist} = route?.params;
   
   const nav = useNavigation();
 
@@ -19,6 +17,8 @@ const SharedWishlistPage = ({user}) => {
     }
   }
 
+
+
   // Navigere til ChatPage
   const navigateToChatPage = () => {
     nav.navigate('ChatPage', {wishlistId: wishlist.id})
@@ -28,7 +28,6 @@ const SharedWishlistPage = ({user}) => {
     nav.pop();
   }
 
-  if(wishlist) {
     return (
       <View style={styles.container}>
           <TouchableOpacity onPress={navigateBack}>
@@ -61,13 +60,6 @@ const SharedWishlistPage = ({user}) => {
           </TouchableOpacity>
       </View>
     )
-  }
-  else {
-    return (
-      <Text>Hello</Text>
-    )
-  }
-
 }
 
 const ItemSeparator = () => {
