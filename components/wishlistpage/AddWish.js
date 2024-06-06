@@ -35,7 +35,7 @@ const AddWish = ({addWish, closeModal, webscrapeContent, getWebResults}) => {
 
     // Kalder addwish argumentet med wishOjbect
     const addNewWish = () => {
-      if(name && description && price && link && pictureURL) {
+      if(name && description && price && itemUrl && imageUrl) {
         const wishObject = {
           id: 0,
           name: name,
@@ -44,13 +44,14 @@ const AddWish = ({addWish, closeModal, webscrapeContent, getWebResults}) => {
           link: itemUrl,
           pictureURL: imageUrl,
         };
+        addWish(wishObject);
+        closeModal();
       }
       else {
         setErrorText("Udfyld alle felterne!");
         return;
       }
-        addWish(wishObject);
-        closeModal();
+
     }
 
     // henter web results fra den url bruger har indtastet

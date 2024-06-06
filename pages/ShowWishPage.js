@@ -13,7 +13,7 @@ const ShowWishPage = ({user, deleteWish}) => {
 
 
     const bottomSheetModalRef = useRef(null);
-    const snapPoints = useMemo(() => ['40%'], []);
+    const snapPoints = useMemo(() => ['40%',], []);
 
 
     const nav = useNavigation();
